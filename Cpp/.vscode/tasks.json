@@ -1,0 +1,12 @@
+{
+  "tasks": [
+    {
+      "label": "Make as build profile",
+      "type": "shell",
+      "command": "make",
+      "args": [],
+      "problemMatcher": []
+    }
+  ],
+  "version": "2.0.0"
+}
