@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -g -Wall -DDEBUG
+CXXFLAGS = -std=c++20 -g -Wall -DDEBUG
 BUILD_DIR = build
 
 .PHONY: all clean run hook

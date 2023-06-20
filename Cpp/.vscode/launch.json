@@ -9,11 +9,12 @@
         "request": "launch",
         "program": "${workspaceFolder}/build/solve",
         "args": [],
-        "stopAtEntry": true,
+        "stopAtEntry": false,
         "cwd": "${fileDirname}",
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
+        "preLaunchTask": "make solve",
         "setupCommands": [
             {
                 "description": "Enable pretty-printing for gdb",

@@ -1,0 +1,2 @@
+all:
+	@python solve.py

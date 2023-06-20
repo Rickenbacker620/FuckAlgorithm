@@ -1,7 +1,7 @@
 {
   "tasks": [
     {
-      "label": "Make as build profile",
+      "label": "make solve",
       "type": "shell",
       "command": "make",
       "args": [],
