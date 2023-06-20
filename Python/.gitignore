@@ -1,0 +1,7 @@
+**/*
+!solve.py
+!utils.py
+!.vscode/
+!.vscode/*
+!Makefile
+!.gitignore
