@@ -2,11 +2,14 @@ from tabulate import tabulate
 from colorama import Fore
 from time import time
 from pprint import pprint
+from functools import cache
+from math import inf
+
 
 class Arguments(list):
-
-    def __call__(self, correct_answer=float("inf"), **kwargs):
-        self.append({"ANS": correct_answer} | kwargs)
+    def __call__(self, correct_answer=None, disabled=False, **kwargs):
+        if not disabled:
+            self.append({"ANS": correct_answer} | kwargs)
 
 
 class Counter:
@@ -29,7 +32,7 @@ class Solution:
     @classmethod
     def analyze(cls):
         runs = [list(row) for row in zip(*cls._solutions)]
-        for arg,run in zip(cls.args, runs):
+        for arg, run in zip(cls.args, runs):
             temparg = arg.copy()
             pprint(temparg, width=40)
             print(tabulate(run, cls._headers, "grid", ".5f"))
@@ -45,11 +48,14 @@ class Solution:
             ans_color = Fore.GREEN if myans == str(ans) else Fore.RED
             myans = ans_color + myans + Fore.RESET
             end = time()
-            runs.append([self.__class__.__name__,
-                myans,
-                (end - start)*1e3,
-                f"{self._counter.count}/{self._cache.count}"
-            ])
+            runs.append(
+                [
+                    self.__class__.__name__,
+                    myans,
+                    (end - start) * 1e3,
+                    f"{self._counter.count}/{self._cache.count}",
+                ]
+            )
             self._counter.clear()
             self._cache.clear()
         self.__class__._solutions.append(runs)
@@ -57,4 +63,12 @@ class Solution:
     def solve(self):
         pass
 
-inf = float("inf")
+
+def bit_check(N, i):
+    return True if N & (1 << i) else False
+
+def bit_set(N, i):
+    return N | (1 << i)
+
+def bit_unset(N, i):
+    return N & ~(1 << i)

@@ -5,3 +5,5 @@
 !.vscode/*
 !Makefile
 !.gitignore
+!archive/
+!archive/*
