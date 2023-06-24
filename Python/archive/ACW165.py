@@ -1,13 +1,15 @@
-# https://www.acwing.com/problem/content/167/
+# https://www.acwing.com/problem/content/description/167/
+import sys
+sys.path.append("/home/shiro/Projects/FuckAlgorithm/Python")
 from utils import *
 
 Solution.args(2, N=5, W=1996, cats=[1, 2, 1994, 12, 29])
 
-Solution.args(2, N=5, W=16, cats=[9, 5, 5, 5, 4, 3])
+# Solution.args(2, N=5, W=16, cats=[9, 5, 5, 5, 4, 3])
 
 Solution.args(
-    # disabled=True,
     6,
+    disabled=True,
     N=18,
     W=100000000,
     cats=[
@@ -34,6 +36,7 @@ Solution.args(
 
 Solution.args(
     5,
+    disabled=True,
     N=18,
     W=100000000,
     cats=[
@@ -85,6 +88,7 @@ class DFSBackTrack(Solution):
 
 
 # DFSBackTrack() TLE
+
 
 
 class DFSPassStateAsArgs(Solution):
@@ -146,38 +150,90 @@ class DFSPassStateAsArgs(Solution):
 # technically but this does not make significant improvement
 
 
-class DFSOptimized(Solution):
+class DFSCatByCat(Solution):
     def solve(self, N, W, cats):
         self.opt = inf
-        self.cars = [W]
+
+        cars = [[]]
 
         cats.sort(reverse=True)
 
+        def check(cat, car):
+            return W - sum(car) >= cat
+
         def dfs(cati):
-            if len(self.cars) >= self.opt:
+            self._counter()
+            print(cars)
+            if len(cars) >= self.opt:
                 return
 
+
             if cati == len(cats):
-                self.opt = len(self.cars)
+                self.opt = len(cars)
                 return
 
             cat_w = cats[cati]
 
-            for idx, car_w in enumerate(self.cars):
-                if car_w >= cat_w:
-                    self.cars[idx] -= cat_w
+            for car in cars:
+                if check(cat_w, car):
+                    car.append(cat_w)
                     dfs(cati + 1)
-                    self.cars[idx] += cat_w
+                    car.pop()
 
-            self.cars.append(W - cat_w)
+            cars.append([cat_w])
             dfs(cati + 1)
-            self.cars.pop()
+            cars.pop()
+
+        cars[0].append(cats[0])
+        dfs(1)
+        return self.opt
+
+
+DFSCatByCat()
+
+class DFSCarByCar(Solution):
+    def solve(self, N, W, cats):
+        self.opt = inf
+        cars = [[]]
+        used = [False] * N
+        cats.sort(reverse=True)
+        print(cats)
+
+        def check(cat, car):
+            return W - sum(car) >= cat
+
+        def dfs(cati):
+            self._counter()
+            print(cars)
+            if len(cars) >= self.opt:
+                return
+
+            if all(used):
+                self.opt = len(cars)
+                return
+
+            flag = True
+
+            for i in range(cati, N):
+                cat_w = cats[i]
+                if check(cat_w, cars[-1]) and not used[i]:
+                    used[i] = True
+                    cars[-1].append(cat_w)
+                    dfs(cati + 1)
+                    cars[-1].pop()
+                    used[i] = False
+                    flag = False
+            if flag:
+                cars.append([])
+                dfs(0)
+                cars.pop()
 
         dfs(0)
         return self.opt
 
 
-DFSOptimized()
+DFSCarByCar()
+
 
 
 class DFSOptimizedStateArg(Solution):
@@ -210,7 +266,7 @@ class DFSOptimizedStateArg(Solution):
         return self.opt
 
 
-DFSOptimizedStateArg()
+# DFSOptimizedStateArg()
 
 
 # NOTE DP and next python flavor DP is enhanced from the first 2 DFS method
@@ -243,7 +299,7 @@ class DP(Solution):
         return dp[(1 << N) - 1]
 
 
-DP()
+# DP()
 
 
 class DPPyFlavor(Solution):
@@ -281,7 +337,20 @@ class DPPyFlavor(Solution):
 
         return dp[(1 << N) - 1].opt
 
+# ANCHOR
+# This problem diff to Leetcode 322 coin change, why this cannot return value??
+# No! it actually can, as long as we can represent the current state in the
+# dfs arguments, that way we can even use cache to memorize
+# but it is pretty hard though, we need to sqeeze the state
+# also caching is does less work, since the states are merely overlap
+# for example, in coin change, i can meet many times when i have a weigh of 11
+# but in cat problem only we meet
+# 1.cat remain [cat1, cat3, cat5]
+# 2.cars remain [10,20,30]
+# can we say that the problems are "overlapd", thus can be cached
+# also the argument space is "sparse"
+# so we need to possibly cut branches and find other methods to optimize
 
-DPPyFlavor()
+# DPPyFlavor()
 
 Solution.analyze()

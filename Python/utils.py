@@ -4,6 +4,7 @@ from time import time
 from pprint import pprint
 from functools import cache
 from math import inf
+from copy import deepcopy
 
 
 class Arguments(list):
@@ -23,6 +24,7 @@ class Counter:
 
 
 class Solution:
+    print_args = True
     args = Arguments()
     _counter = Counter()
     _cache = Counter()
@@ -34,14 +36,15 @@ class Solution:
         runs = [list(row) for row in zip(*cls._solutions)]
         for arg, run in zip(cls.args, runs):
             temparg = arg.copy()
-            pprint(temparg, width=40)
+            if cls.print_args:
+                pprint(temparg, width=40)
             print(tabulate(run, cls._headers, "grid", ".5f"))
 
     def __init__(self):
         runs = []
         for idx, argset in enumerate(self.args):
             print(f"{self.__class__.__name__}--{idx}")
-            tempargs = argset.copy()
+            tempargs = deepcopy(argset)
             ans = tempargs.pop("ANS")
             start = time()
             myans = str(self.solve(**tempargs))
