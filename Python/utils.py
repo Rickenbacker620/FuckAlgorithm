@@ -24,6 +24,7 @@ class Counter:
         if explode and self.count == explode:
             exit(0)
         self.count += 1
+        return self.count
 
 class Timer:
     now = None
@@ -109,29 +110,67 @@ class TreeNode:
         self.left = left
         self.right = right
 
-def tree_constructor(node_list: list[int|None]) -> TreeNode:
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors:list[Node] = neighbors if neighbors is not None else []
 
-    root = TreeNode(node_list[0])
-    curr = [root]
-    ptr = 1
+    def __repr__(self) -> str:
+        return str(self.val)
 
-    while ptr < len(node_list):
-        curr2 = []
-        for c in curr:
+def graph_constructor(nodes:list[list]):
+    nodes_ = {i+1:Node(val=i+1) for i in range(len(nodes))}
+    for i, neighbors in enumerate(nodes):
+        for neigh in neighbors:
+            nodes_[i+1].neighbors.append(nodes_[neigh])
+    return nodes_[1]
 
-            if node_list[ptr] is not None:
-                new = TreeNode(node_list[ptr])
-                c.left = new
-                curr2.append(new)
-            ptr += 1
 
-            if ptr >= len(node_list):
-                break
+def tree_constructor(nodes:list):
+    nodes.reverse()
 
-            if node_list[ptr] is not None:
-                new = TreeNode(node_list[ptr])
-                c.right = new
-                curr2.append(new)
-            ptr += 1
-        curr = curr2
+    if not nodes or not nodes[0]:
+        return None
+
+    root = TreeNode(nodes.pop())
+    from collections import deque
+    Q = deque()
+    Q.append(root)
+
+    while nodes:
+        head = Q.popleft()
+        l_nxt = nodes.pop()
+        if l_nxt != None:
+            head.left = TreeNode(l_nxt)
+            Q.append(head.left)
+
+        r_nxt = nodes.pop()
+        if r_nxt != None:
+            head.right = TreeNode(r_nxt)
+            Q.append(head.right)
+
     return root
+
+def tree_preorder_traverse(node):
+    if not node:
+        return
+
+    print(node)
+    tree_preorder_traverse(node.left)
+    tree_preorder_traverse(node.right)
+
+def tree_inorder_traverse(node):
+    if not node:
+        return
+
+    tree_inorder_traverse(node.left)
+    print(node)
+    tree_inorder_traverse(node.right)
+
+def tree_postorder_traverse(node):
+    if not node:
+        return
+
+    tree_postorder_traverse(node.left)
+    tree_postorder_traverse(node.right)
+    print(node)

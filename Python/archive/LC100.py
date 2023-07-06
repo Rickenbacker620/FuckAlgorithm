@@ -61,11 +61,8 @@ class SOpt2(Solution):
 
         def traverse(p: TreeNode | None, q):
 
-            if p == q == None:
-                return True
-
             if p == None or q == None:
-                return False
+                return p == q
 
             # NOTE using preorder traverse can cut the root faster
             return p.val == q.val and traverse(p.left, q.left) and traverse(p.right, q.right)
