@@ -144,6 +144,9 @@ def tree_constructor(nodes:list):
             head.left = TreeNode(l_nxt)
             Q.append(head.left)
 
+        if not nodes:
+            break
+
         r_nxt = nodes.pop()
         if r_nxt != None:
             head.right = TreeNode(r_nxt)
