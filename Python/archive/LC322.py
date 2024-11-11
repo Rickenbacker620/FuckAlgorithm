@@ -7,6 +7,13 @@ Solution.args(1, coins=[1, 2], amount=2)
 Solution.args(20, coins=[1, 2, 5], amount=100)
 Solution.args(20, coins=[186, 419, 83, 408], amount=6249)
 Solution.args(2, coins=[1, 2147483647], amount=2)
+# DFS cut branch failed on this test case
+# since the every possible step (in this case is coin value) are close to each other
+# however, branch cut is based on greedy algorithm, so we cannot cut too much branches
+# In general, when the step is close to each other, DFS is not a good choice
+# However, this problem can be solved using DP or memoization
+# why memorization? because the solution space is dense, we have a lot of repeated subproblems
+Solution.args(1, coins=[411,412,413,414,415,416,417,418,419,420,421,422], amount=9864)
 
 
 class SolutionDFSCustomCache(Solution):
